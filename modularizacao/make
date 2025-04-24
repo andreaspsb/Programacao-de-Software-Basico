@@ -1,0 +1,27 @@
+CFLAGS = -Wall
+
+all: teste
+
+libstatic: libmatematica.a
+libshared: libmatematica.so
+
+teste: teste.o libmatematica.so
+	gcc -o teste teste.o -L. -lmatematica
+
+teste-static: teste.o libmatematica.a
+	gcc -o teste teste.o -L. -lmatematica
+
+teste.o: teste.c
+	gcc -c teste.c $(CFLAGS)
+
+matematica.o: matematica.c
+	gcc -c matematica.c $(CFLAGS)
+
+libmatematica.a: matematica.o
+	ar rcs libmatematica.a matematica.o
+
+libmatematica.so: matematica.o
+	gcc -fPIC -shared -o libmatematica.so matematica.o
+
+clean:
+	rm -f *.o *.so *.a
